@@ -34,9 +34,8 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub_credentials', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
                     sh "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD"
-                    // TODO: remplace TON_USERNAME_DOCKERHUB par ton propre namespace Docker Hub
-                    sh "docker build -t TON_USERNAME_DOCKERHUB/mini-api:v$BUILD_NUMBER ."
-                    sh "docker push TON_USERNAME_DOCKERHUB/mini-api:v$BUILD_NUMBER"
+                    sh "docker build -t moustapham/mini-api:v$BUILD_NUMBER ."
+                    sh "docker push moustapham/mini-api:v$BUILD_NUMBER"
                 }
             }
         }
@@ -57,10 +56,10 @@ pipeline {
                         sh """
                             ssh -i /idrsa -o StrictHostKeyChecking=no user@remote.server.com '
                             cd /home/user/app &&
-                            docker pull TON_USERNAME_DOCKERHUB/mini-api:v$BUILD_NUMBER &&
+                            docker pull moustapham/mini-api:v$BUILD_NUMBER &&
                             docker stop mini-api || true &&
                             docker rm mini-api || true &&
-                            docker run -d --name mini-api -p 8080:8080 TON_USERNAME_DOCKERHUB/mini-api:v$BUILD_NUMBER
+                            docker run -d --name mini-api -p 8080:8080 moustapham/mini-api:v$BUILD_NUMBER
                             '
                         """
                         // }
